@@ -8,7 +8,23 @@ MD_MAX72XX cartel = MD_MAX72XX(HARDWARE_TYPE, 11, 13, 10, 4);
 int comida_X;
 int comida_Y;
 
+bool pantalla[8][32];
 
+void updatePantalla()
+{
+  for(int Fila = 0; Fila < 8; Fila++){
+  for(int Columna = 0; Columna < 32; Columna++){
+ cartel.setPoint(Fila,Columna, pantalla[Fila][Columna]);
+  }
+}
+}
+
+void generarComida()
+{
+comida_X = random(8);
+comida_Y = random(32);
+pantalla[comida_X][comida_Y] = true;
+}
 
 void setup() {
  
@@ -25,20 +41,13 @@ comida_Y = random(32);
   cartel.control( MD_MAX72XX::UPDATE, true );
 }
 
- int rr = 0;
 void loop() {
 
-comida_X = random(8);
-comida_Y = random(32);
-  cartel.setPoint(comida_X,comida_Y, true);
-for(int Fila = 0; Fila < 8; Fila++){
+generarComida();
+
+
   
-}
-  //cartel.update();
-  delay(1000);
-  cartel.clear();
-  //cartel.update();
-  delay(1000);
-  
+updatePantalla();
+delay(200);
 }
 
