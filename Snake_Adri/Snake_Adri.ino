@@ -10,11 +10,11 @@ int comida_Y;
 
 
 
-
-
-
-
 void setup() {
+ 
+comida_X = random(8);
+comida_Y = random(32);
+
   // inicializar el objeto mx
   cartel.begin();
 
@@ -27,15 +27,18 @@ void setup() {
 
  int rr = 0;
 void loop() {
-  cartel.setPoint(5,12, true);
-  cartel.setPoint(5,20, true);
-  cartel.setPoint(7,31, true);
-  cartel.setPoint(1,26, true);
+
+comida_X = random(8);
+comida_Y = random(32);
+  cartel.setPoint(comida_X,comida_Y, true);
+for(int Fila = 0; Fila < 8; Fila++){
+  
+}
   //cartel.update();
   delay(1000);
   cartel.clear();
   //cartel.update();
   delay(1000);
-
+  
 }
 
