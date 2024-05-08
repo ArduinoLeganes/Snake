@@ -16,11 +16,12 @@ int Columna;
 bool Ha_muerto;
 bool Ha_comido;
 
+int snake_head[2];
+
 bool pantalla[8][32];
 
 
 void Crecer_serpiente() {
-
 }
 
 void generarComida() {
@@ -34,13 +35,31 @@ void generarComida() {
 }
 
 bool Comprobar_comida() {
-
 }
 
 bool Comprobar_muerte() {
-Snake_head = 
+  if (snake_head[0] < 0) {
+    return true;
+  }
+  if (snake_head[0] > 7) {
+    return true;
+  }
+  if (snake_head[1] < 0) {
+    return true;
+  }
+  if (snake_head[1] > 31) {
+    return true;
+  }
+  if (pantalla[snake_head[0]][snake_head[1]] == true) {
+    if (snake_head[0] == comida_X && snake_head[1] == comida_Y) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
 }
-}
+
 
 void Game_over() {
 }
@@ -54,7 +73,6 @@ void updatePantalla() {
 }
 
 void actualizar_snake() {
-
 }
 
 void Read_joystick() {
