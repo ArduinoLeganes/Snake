@@ -36,15 +36,15 @@ void actualizar_snake() {
   cola_Y.add(snake_head[1]);
 
   // Mueve la serpiente
-  if (direccion == 0) snake_head[0]--;       // Arriba
-  else if (direccion == 1) snake_head[0]++;  // Abajo
-  else if (direccion == 2) snake_head[1]--;  // Izquierda
-  else if (direccion == 3) snake_head[1]++;  // Derecha
-  // Si no ha comido, elimina el último segmento de la cola
+  if (direccion == 2) snake_head[0]--;       // Arriba
+  else if (direccion == 3) snake_head[0]++;  // Abajo
+  else if (direccion == 0) snake_head[1]--;  // Izquierda
+  else if (direccion == 1) snake_head[1]++;  // Derecha
+  if(Ha_comido == false){// Si no ha comido, elimina el último segmento de la cola
   int tail_X = cola_X.remove(0);
   int tail_Y = cola_Y.remove(0);
-  pantalla[tail_Y][tail_X] = false;
-  pantalla[snake_head[1]][snake_head[0]] = true;
+  pantalla[tail_X][tail_Y] = false;
+  pantalla[snake_head[0]][snake_head[1]] = true;}
 }
 
 void Crecer_serpiente() {
@@ -53,6 +53,7 @@ void Crecer_serpiente() {
 void generarComida() {
   comida_X = random(8);
   comida_Y = random(32);
+
   while (pantalla[comida_X][comida_Y] == true) {
     comida_X = random(8);
     comida_Y = random(32);
@@ -61,7 +62,13 @@ void generarComida() {
 }
 
 bool Comprobar_comida() {
-if (snake_head[1] == comida_X && snake_head[0] == comida_Y){
+Serial.println(snake_head[0]);
+Serial.println(snake_head[1]);
+Serial.println(comida_X);
+Serial.println(comida_Y);
+Serial.println("");
+if (snake_head[0] == comida_X && snake_head[1] == comida_Y){
+  Serial.println("comidabien");
   return true;
 }
 return false;
@@ -148,7 +155,7 @@ void setup() {
 
 void loop() {
   Read_joystick();
-  Serial.println(direccion);
+  
   actualizar_snake();
   Ha_comido = Comprobar_comida();
   if (Ha_comido == true) {
@@ -158,7 +165,7 @@ void loop() {
   Ha_muerto = Comprobar_muerte();
   if (Ha_muerto == true) {
     Game_over();
-    delay(300);
+    
   }
   updatePantalla();
 }
