@@ -7,14 +7,8 @@
 MD_MAX72XX cartel = MD_MAX72XX(HARDWARE_TYPE, 11, 13, 10, 4);
 
 int snake_head[2];
-void Init(){
-
-generarComida();
-snake_head[0] = 5;
-snake_head[1] = 13;
-}
-int xAxis, yAxis;
 int direccion;
+int xAxis, yAxis;
 int Umbral = 100;
 int comida_X;
 int comida_Y;
@@ -29,7 +23,22 @@ bool Ha_comido;
 
 
 bool pantalla[8][32];
- 
+////////////////////////////////////////////
+void Init() {
+  for (int Iterador = 0; Iterador < 8; Iterador++) {
+    for (int Iterador2 = 0; Iterador2 < 32; Iterador2++) {
+      pantalla[Iterador][Iterador2] = false;
+    }
+  }
+  snake_head[0] = 5;
+  snake_head[1] = 13;
+  pantalla[snake_head[0]][snake_head[1]] = true;
+  generarComida();
+  Ha_muerto = false;
+  Ha_comido = false;
+}
+
+
 void actualizar_snake() {
   // Agrega la posición actual de la cabeza a la cola
   cola_X.add(snake_head[0]);
@@ -61,10 +70,10 @@ void generarComida() {
 }
 
 bool Comprobar_comida() {
-if (snake_head[1] == comida_X && snake_head[0] == comida_Y){
-  return true;
-}
-return false;
+  if (snake_head[1] == comida_X && snake_head[0] == comida_Y) {
+    return true;
+  }
+  return false;
 }
 
 bool Comprobar_muerte() {
@@ -87,12 +96,17 @@ bool Comprobar_muerte() {
       return true;
     }
   }
-
 }
 
 
 void Game_over() {
-
+  for (int Iterador = 0; Iterador < 8; Iterador++) {
+    for (int Iterador2 = 0; Iterador2 < 32; Iterador2++) {
+      pantalla[Iterador][Iterador2] = true;
+    }
+  }
+delay(2000);
+Init();
 }
 
 void updatePantalla() {
@@ -112,7 +126,6 @@ void Read_joystick() {
   // Si el joystick se mueve hacia la izquierda, gira el motor en sentido antihorario
   if (xAxis < (512 - Umbral)) {
     direccion = 0;
-  
   }
   // Si el joystick no se mueve, detiene el motor
   if (xAxis > (512 + Umbral)) {
@@ -131,8 +144,8 @@ void Read_joystick() {
 
 void setup() {
   Serial.begin(9600);
-  generarComida();
-   pinMode(9, OUTPUT);
+  Init();
+  pinMode(9, OUTPUT);
   // inicializar el objeto mx
   cartel.begin();
 
@@ -141,9 +154,9 @@ void setup() {
 
   // Desactivar auto-actualizacion
   cartel.control(MD_MAX72XX::UPDATE, true);
- snake_head[0] = 0; // Establecemos las coordenadas iniciales de la cabeza de la serpiente
+  snake_head[0] = 0;  // Establecemos las coordenadas iniciales de la cabeza de la serpiente
   snake_head[1] = 0;
-  pantalla[snake_head[0]] [snake_head[1]] = true;
+ 
 }
 
 void loop() {
@@ -154,11 +167,13 @@ void loop() {
   if (Ha_comido == true) {
     Crecer_serpiente();
     generarComida();
+    Ha_comido = false;
   }
   Ha_muerto = Comprobar_muerte();
+  Serial.println(Ha_muerto);
   if (Ha_muerto == true) {
     Game_over();
-    delay(300);
   }
   updatePantalla();
+  delay(300);
 }
