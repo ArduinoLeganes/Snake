@@ -95,10 +95,13 @@ void updatePantalla() {
 
 
 void Read_joystick() {
+  xAxis = analogRead(A0);
+  yAxis = analogRead(A1);
   // 0 = izquierda, 1 = decbar, 2 = arriba, 3= abajo
   // Si el joystick se mueve hacia la izquierda, gira el motor en sentido antihorario
   if (xAxis < (512 - Umbral)) {
     direccion = 0;
+  
   }
   // Si el joystick no se mueve, detiene el motor
   if (xAxis > (512 + Umbral)) {
@@ -116,8 +119,9 @@ void Read_joystick() {
 
 
 void setup() {
+  Serial.begin(9600);
   generarComida();
-
+   pinMode(9, OUTPUT);
   // inicializar el objeto mx
   cartel.begin();
 
@@ -126,10 +130,14 @@ void setup() {
 
   // Desactivar auto-actualizacion
   cartel.control(MD_MAX72XX::UPDATE, true);
+ snake_head[0] = 0; // Establecemos las coordenadas iniciales de la cabeza de la serpiente
+  snake_head[1] = 0;
+  pantalla[snake_head[0]] [snake_head[1]] = true;
 }
 
 void loop() {
   Read_joystick();
+  Serial.println(direccion);
   actualizar_snake();
   Ha_comido = Comprobar_comida();
   if (Ha_comido == true) {
@@ -139,6 +147,7 @@ void loop() {
   Ha_muerto = Comprobar_muerte();
   if (Ha_muerto == true) {
     Game_over();
+    delay(300);
   }
   updatePantalla();
 }
