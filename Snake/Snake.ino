@@ -55,6 +55,10 @@ void generarComida() {
 }
 
 bool Comprobar_comida() {
+if (snake_head[1] == comida_X && snake_head[0] == comida_Y){
+  return true;
+}
+return false;
 }
 
 bool Comprobar_muerte() {
@@ -82,6 +86,7 @@ bool Comprobar_muerte() {
 
 
 void Game_over() {
+  
 }
 
 void updatePantalla() {

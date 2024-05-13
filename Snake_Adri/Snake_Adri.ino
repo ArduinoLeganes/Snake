@@ -26,9 +26,9 @@ void actualizar_snake(){
   }
  
 }
+bool pantalla[8][32];
 pantalla[snake_head[1]][snake_head[0]] = true;
 
-bool pantalla[8][32];
 
 void updatePantalla()
 {
