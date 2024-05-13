@@ -6,6 +6,13 @@
 
 MD_MAX72XX cartel = MD_MAX72XX(HARDWARE_TYPE, 11, 13, 10, 4);
 
+int snake_head[2];
+void Init(){
+
+generarComida();
+snake_head[0] = 5;
+snake_head[1] = 13;
+}
 int xAxis, yAxis;
 int direccion;
 int Umbral = 100;
@@ -20,7 +27,6 @@ LinkedList<int> cola_Y;  // Lista enlazada para la cola Y de la serpiente
 bool Ha_muerto;
 bool Ha_comido;
 
-int snake_head[2];
 
 bool pantalla[8][32];
  
@@ -55,6 +61,10 @@ void generarComida() {
 }
 
 bool Comprobar_comida() {
+if (snake_head[1] == comida_X && snake_head[0] == comida_Y){
+  return true;
+}
+return false;
 }
 
 bool Comprobar_muerte() {
@@ -82,6 +92,7 @@ bool Comprobar_muerte() {
 
 
 void Game_over() {
+
 }
 
 void updatePantalla() {
