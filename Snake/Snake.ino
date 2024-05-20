@@ -2,6 +2,7 @@
 #define MAX_DEVICES 4
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #include <LinkedList.h>
+#include <Wire.h>
 
 
 MD_MAX72XX cartel = MD_MAX72XX(HARDWARE_TYPE, 11, 13, 10, 4);
@@ -45,6 +46,8 @@ void Init() {
   generarComida();
   Ha_muerto = false;
   Ha_comido = false;
+
+  reproducirmusica();
 }
 
 
@@ -118,6 +121,7 @@ bool Comprobar_muerte() {
 
 
 void Game_over() {
+  pararmusica();
   for (int Iterador = 0; Iterador < 8; Iterador++) {
     for (int Iterador2 = 0; Iterador2 < 32; Iterador2++) {
       pantalla[Iterador][Iterador2] = true;
@@ -127,6 +131,7 @@ void Game_over() {
   sonidoend();
   delay(2000);
   Init();
+
 }
 
 void updatePantalla() {
@@ -182,6 +187,16 @@ bool sonidoend() {
   noTone(zumbadorPin);
 }
 
+void pararmusica() {
+ 
+  Wire.write("p"); // p para parar
+ 
+}
+void reproducirmusica() {
+ 
+  Wire.write("r");
+
+}
 void setup() {
   Serial.begin(9600);
   Init();
@@ -194,6 +209,9 @@ void setup() {
 
   // Desactivar auto-actualizacion
   cartel.control(MD_MAX72XX::UPDATE, true);
+
+  Wire.begin(); 
+  Wire.beginTransmission(8);
 }
 
 void loop() {
