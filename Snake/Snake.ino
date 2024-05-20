@@ -5,6 +5,8 @@
 
 
 MD_MAX72XX cartel = MD_MAX72XX(HARDWARE_TYPE, 11, 13, 10, 4);
+const int notaDo = 261;
+const int zumbadorPin = 9;
 
 int snake_head[2];
 int direccion;
@@ -76,10 +78,7 @@ void generarComida() {
   }
   pantalla[comida_X][comida_Y] = true;
 }
-bool Sonido_Comida(){   
-  tone(zumbadorPin, notaDo); 
-  delay(1000); 
-  noTone(zumbadorPin);}
+
 bool Comprobar_comida() {
 
   //Serial.println(snake_head[0]);
@@ -116,7 +115,8 @@ bool Comprobar_muerte() {
   }
   return false;
 }
- 
+
+
 void Game_over() {
   for (int Iterador = 0; Iterador < 8; Iterador++) {
     for (int Iterador2 = 0; Iterador2 < 32; Iterador2++) {
@@ -124,6 +124,7 @@ void Game_over() {
     }
   }
   updatePantalla();
+  sonidoend();
   delay(2000);
   Init();
 }
@@ -168,12 +169,23 @@ void Read_joystick() {
   }
 }
 
+bool sonidocomer() {
+  tone(zumbadorPin, 659, 200);  // La nota E (659 Hz) durante 200 ms
+  delay(250);                   // Pausa
+  tone(zumbadorPin, 587, 200);
+  noTone(zumbadorPin);
+}
 
+bool sonidoend() {
+  tone(zumbadorPin, notaDo);  // Reproduce la nota Do
+  delay(1000);                // Espera 1 segundo
+  noTone(zumbadorPin);
+}
 
 void setup() {
   Serial.begin(9600);
   Init();
-  pinMode(9, OUTPUT);
+  pinMode(zumbadorPin, OUTPUT);
   // inicializar el objeto mx
   cartel.begin();
 
@@ -190,7 +202,7 @@ void loop() {
   actualizar_snake();
 
   if (Ha_comido == true) {
-
+    sonidocomer();
     generarComida();
     Ha_comido = false;
   }
