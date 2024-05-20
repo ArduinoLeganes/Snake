@@ -24,6 +24,8 @@ bool Ha_comido;
 
 bool pantalla[8][32];
 ////////////////////////////////////////////
+
+
 void Init() {
   for (int Iterador = 0; Iterador < 8; Iterador++) {
     for (int Iterador2 = 0; Iterador2 < 32; Iterador2++) {
@@ -32,6 +34,11 @@ void Init() {
   }
   snake_head[0] = 3;
   snake_head[1] = 16;
+  cola_X.clear();
+  cola_Y.clear();
+  cola_X.add(snake_head[0]);
+  cola_Y.add(snake_head[1]);
+
   pantalla[snake_head[0]][snake_head[1]] = true;
   generarComida();
   Ha_muerto = false;
@@ -41,24 +48,22 @@ void Init() {
 
 void actualizar_snake() {
   // Agrega la posición actual de la cabeza a la cola
-  cola_X.add(snake_head[0]);
-  cola_Y.add(snake_head[1]);
 
   // Mueve la serpiente
   if (direccion == 2) snake_head[0]--;       // Arriba
   else if (direccion == 3) snake_head[0]++;  // Abajo
   else if (direccion == 1) snake_head[1]--;  // Izquierda
   else if (direccion == 0) snake_head[1]++;  // Derecha
+  cola_X.add(snake_head[0]);
+  cola_Y.add(snake_head[1]);
+  Ha_comido = Comprobar_comida();
   Ha_muerto = Comprobar_muerte();
-  if (Ha_comido == false) {                  // Si no ha comido, elimina el último segmento de la cola
+  if (Ha_comido == false) {  // Si no ha comido, elimina el último segmento de la cola
     int tail_X = cola_X.remove(0);
     int tail_Y = cola_Y.remove(0);
     pantalla[tail_X][tail_Y] = false;
-    pantalla[snake_head[0]][snake_head[1]] = true;
   }
-}
-
-void Crecer_serpiente() {
+  pantalla[snake_head[0]][snake_head[1]] = true;
 }
 
 void generarComida() {
@@ -139,21 +144,30 @@ void Read_joystick() {
   // 0 = izquierda, 1 = decbar, 2 = arriba, 3= abajo
   // Si el joystick se mueve hacia la izquierda, gira el motor en sentido antihorario
   if (xAxis < (512 - Umbral)) {
-    direccion = 0;
+     if (direccion != 1) {
+      direccion = 0;
+  }
   }
   // Si el joystick no se mueve, detiene el motor
   if (xAxis > (512 + Umbral)) {
-    direccion = 1;
+     if (direccion != 0) {
+      direccion = 1;
+  }
+  }
+  if (yAxis < (512 - Umbral)) {
+ if (direccion != 3) {
+      direccion = 2;
+  }
   }
 
-  if (yAxis < (512 - Umbral)) {
-    direccion = 2;
-  }
   // Si el joystick no se mueve, detiene el motor
   if (yAxis > (512 + Umbral)) {
-    direccion = 3;
+    if (direccion != 2) {
+      direccion = 3;
+    }
   }
 }
+
 
 
 void setup() {
@@ -172,11 +186,11 @@ void setup() {
 
 void loop() {
   Read_joystick();
-    // 0 = izquierda, 1 = decbar, 2 = arriba, 3= abajo
+  // 0 = izquierda, 1 = decbar, 2 = arriba, 3= abajo
   actualizar_snake();
-  Ha_comido = Comprobar_comida();
+
   if (Ha_comido == true) {
-    Crecer_serpiente();
+
     generarComida();
     Ha_comido = false;
   }
@@ -185,7 +199,7 @@ void loop() {
   if (Ha_muerto == true) {
     Game_over();
   }
-  
+
   updatePantalla();
   delay(300);
 }
