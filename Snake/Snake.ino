@@ -30,8 +30,8 @@ void Init() {
       pantalla[Iterador][Iterador2] = false;
     }
   }
-  snake_head[0] = 5;
-  snake_head[1] = 13;
+  snake_head[0] = 3;
+  snake_head[1] = 16;
   pantalla[snake_head[0]][snake_head[1]] = true;
   generarComida();
   Ha_muerto = false;
@@ -47,13 +47,15 @@ void actualizar_snake() {
   // Mueve la serpiente
   if (direccion == 2) snake_head[0]--;       // Arriba
   else if (direccion == 3) snake_head[0]++;  // Abajo
-  else if (direccion == 0) snake_head[1]--;  // Izquierda
-  else if (direccion == 1) snake_head[1]++;  // Derecha
-  if(Ha_comido == false){// Si no ha comido, elimina el último segmento de la cola
-  int tail_X = cola_X.remove(0);
-  int tail_Y = cola_Y.remove(0);
-  pantalla[tail_X][tail_Y] = false;
-  pantalla[snake_head[0]][snake_head[1]] = true;}
+  else if (direccion == 1) snake_head[1]--;  // Izquierda
+  else if (direccion == 0) snake_head[1]++;  // Derecha
+  Ha_muerto = Comprobar_muerte();
+  if (Ha_comido == false) {                  // Si no ha comido, elimina el último segmento de la cola
+    int tail_X = cola_X.remove(0);
+    int tail_Y = cola_Y.remove(0);
+    pantalla[tail_X][tail_Y] = false;
+    pantalla[snake_head[0]][snake_head[1]] = true;
+  }
 }
 
 void Crecer_serpiente() {
@@ -72,17 +74,16 @@ void generarComida() {
 
 bool Comprobar_comida() {
 
-Serial.println(snake_head[0]);
-Serial.println(snake_head[1]);
-Serial.println(comida_X);
-Serial.println(comida_Y);
-Serial.println("");
-if (snake_head[0] == comida_X && snake_head[1] == comida_Y){
-  Serial.println("comidabien");
-  return true;
-}
-return false;
-
+  //Serial.println(snake_head[0]);
+  //Serial.println(snake_head[1]);
+  //Serial.println(comida_X);
+  //Serial.println(comida_Y);
+  //Serial.println("");
+  if (snake_head[0] == comida_X && snake_head[1] == comida_Y) {
+    Serial.println("comidabien");
+    return true;
+  }
+  return false;
 }
 
 bool Comprobar_muerte() {
@@ -105,6 +106,7 @@ bool Comprobar_muerte() {
       return true;
     }
   }
+  return false;
 }
 
 
@@ -114,8 +116,9 @@ void Game_over() {
       pantalla[Iterador][Iterador2] = true;
     }
   }
-delay(2000);
-Init();
+  updatePantalla();
+  delay(2000);
+  Init();
 }
 
 void updatePantalla() {
@@ -163,14 +166,11 @@ void setup() {
 
   // Desactivar auto-actualizacion
   cartel.control(MD_MAX72XX::UPDATE, true);
-  snake_head[0] = 0;  // Establecemos las coordenadas iniciales de la cabeza de la serpiente
-  snake_head[1] = 0;
- 
 }
 
 void loop() {
   Read_joystick();
-  
+    // 0 = izquierda, 1 = decbar, 2 = arriba, 3= abajo
   actualizar_snake();
   Ha_comido = Comprobar_comida();
   if (Ha_comido == true) {
@@ -178,12 +178,12 @@ void loop() {
     generarComida();
     Ha_comido = false;
   }
-  Ha_muerto = Comprobar_muerte();
-  Serial.println(Ha_muerto);
+  //Ha_muerto = Comprobar_muerte();
+  Serial.println(direccion);
   if (Ha_muerto == true) {
     Game_over();
-
   }
+  
   updatePantalla();
   delay(300);
 }
