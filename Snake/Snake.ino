@@ -71,7 +71,10 @@ void generarComida() {
   }
   pantalla[comida_X][comida_Y] = true;
 }
-
+bool Sonido_Comida(){   
+  tone(zumbadorPin, notaDo); 
+  delay(1000); 
+  noTone(zumbadorPin);}
 bool Comprobar_comida() {
 
   //Serial.println(snake_head[0]);
@@ -108,8 +111,7 @@ bool Comprobar_muerte() {
   }
   return false;
 }
-
-
+ 
 void Game_over() {
   for (int Iterador = 0; Iterador < 8; Iterador++) {
     for (int Iterador2 = 0; Iterador2 < 32; Iterador2++) {
