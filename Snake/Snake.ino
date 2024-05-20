@@ -8,11 +8,12 @@
 MD_MAX72XX cartel = MD_MAX72XX(HARDWARE_TYPE, 11, 13, 10, 4);
 const int notaDo = 261;
 const int zumbadorPin = 9;
+const int velocity_refresh = 150;
 
 int snake_head[2];
 int direccion;
 int xAxis, yAxis;
-int Umbral = 100;
+int Umbral = 300;
 int comida_X;
 int comida_Y;
 int Fila;
@@ -231,5 +232,5 @@ void loop() {
   }
 
   updatePantalla();
-  delay(300);
+  delay(velocity_refresh);
 }
